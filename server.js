@@ -1,23 +1,24 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
+server.listen(3000);
 
-app.get('/', (req, res) => {
-  res.sendfile('index.html');
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-
+io.on('connection', function(socket) {
   var ID = (socket.id).toString().substr(0, 5);
   var time = (new Date).toLocaleTimeString();
 
-  socket.json.send({ 'event': 'connected', 'ID': ID, 'time': time });
-  socket.broadcast.json.send({ 'event': 'userConnected', 'ID': ID, 'time': time });
+  socket.json.send({ 'event': 'connected', 'name': ID, 'time': time });
+  socket.broadcast.json.send({ 'event': 'userJoined', 'name': ID, 'time': time });
 
-})
+  socket.on('message', function(msg) {
+    var time = (new Date).toLocaleTimeString();
+    socket.json.send({ 'event': 'messageSent', 'name': ID, 'text': msg, 'time': time });
+    socket.broadcast.json.send({ 'event': 'messageReceived', 'name': ID, 'text': msg, 'time': time })
+  });
 
-io.on('disconnect', () => {
-  console.log('a user disconnect')
-})
+  socket.on('disconnect', function() {
+    var time = (new Date).toLocaleTimeString();
+    io.sockets.json.send({ 'event': 'userSplit', 'name': ID, 'time': time });
+  });
+});

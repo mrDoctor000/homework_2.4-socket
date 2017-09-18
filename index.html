@@ -2,21 +2,16 @@
 <html>
 
 <head>
-  <meta http-equiv='Content-Type' content='text/html' charset='utf-8'>
+  <meta http-equiv='Content-Type' content='text/html' charset='utf-8' />
   <title>Chat</title>
-  <link rel='stylesheets' href='./styles.css'>
-
-  <script src='./server.js'></script>
+  <link href='./styles.css' rel='stylesheet'>
+  <script src='http://46.182.31.65:8080/socket.io/socket.io.js'></script>
   <script src='./client.js'></script>
 </head>
 
 <body>
-  <div id='logs'>
-
-  </div><br>
-  <input type='text' id='input' autofocus>
-  <input type='submit' value='Send'>
-
+  <div id='log'></div><br>
+  <input type='text' id='input' autofocus><input type='submit' id='send' value='Send'>
 </body>
 
 </html>
