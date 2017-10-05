@@ -9,13 +9,7 @@ strings = {
 };
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  var socket;
-
-  if (navigator.userAgent.toLowerCase().indexOf('chrome') != -1) {
-    socket = io.connect('http://46.182.31.65:8080', { 'transports': ['xhr-polling'] });
-  } else {
-    socket = io.connect('http://46.182.31.65:8080');
-  }
+  var socket = io();
 
   socket.on('connect', () => {
     socket.on('message', msg => {
@@ -43,6 +37,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       document.querySelector('#input').value = '';
     });
   });
+
   socket.on('disconnect', () => {
     socket.disconnect();
   });

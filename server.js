@@ -1,8 +1,10 @@
-const app = require('express')();
+const express = require('express');
+const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
+const conf = require('./conf.js')
 
-server.listen(3000);
+server.listen(conf.port);
 
 io.on('connection', function(socket) {
   var ID = (socket.id).toString().substr(0, 5);
@@ -22,3 +24,11 @@ io.on('connection', function(socket) {
     io.sockets.json.send({ 'event': 'userSplit', 'name': ID, 'time': time });
   });
 });
+
+const rest = express.Router();
+
+rest.get('/', (req, res) => {
+  res.send('./index.html');
+});
+
+app.use('/', rest);

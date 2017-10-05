@@ -1,0 +1,29 @@
+{
+  "name": "homework_socketio",
+  "version": "1.0.0",
+  "description": "homework 2.4",
+  "main": "server.js",
+  "engines": {
+    "node": "3.10.10"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "http": "^0.0.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrDoctor000/homework_2.4-socket.git"
+  },
+  "author": "Ponomarev E.A.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrDoctor000/homework_2.4-socket/issues"
+  },
+  "homepage": "https://github.com/mrDoctor000/homework_2.4-socket#readme"
+}
