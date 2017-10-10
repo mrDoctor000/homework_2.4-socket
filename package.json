@@ -1,5 +1,5 @@
 {
-  "name": "homework_socketio",
+  "name": "homework_socket.io",
   "version": "1.0.0",
   "description": "homework 2.4",
   "main": "server.js",

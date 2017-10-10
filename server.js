@@ -28,7 +28,7 @@ io.on('connection', function(socket) {
 const rest = express.Router();
 
 rest.get('/', (req, res) => {
-  res.send('./index.html');
+  res.sendfile('./index.html');
 });
 
 app.use('/', rest);
