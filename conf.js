@@ -3,7 +3,7 @@ var conf = {
   ip: process.env.IP_ADDRESS || "localhost",
 
   // Порт
-  port: process.env.PORT || 0,
+  port: process.env.PORT || 3000,
 };
 
 module.exports = conf;

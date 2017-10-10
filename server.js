@@ -4,7 +4,15 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const conf = require('./conf.js')
 
-server.listen(conf.port);
+server.listen(conf.port, () => {
+  console.log(`Server listening at port ${conf.port}.`)
+});
+
+app.get('/', (req, res) => {
+  res.sendfile('./index.html');
+});
+
+app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function(socket) {
   var ID = (socket.id).toString().substr(0, 5);
@@ -24,11 +32,3 @@ io.on('connection', function(socket) {
     io.sockets.json.send({ 'event': 'userSplit', 'name': ID, 'time': time });
   });
 });
-
-const rest = express.Router();
-
-rest.get('/', (req, res) => {
-  res.sendfile('./index.html');
-});
-
-app.use('/', rest);
