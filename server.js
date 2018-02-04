@@ -9,7 +9,7 @@ server.listen(conf.port, () => {
 });
 
 app.get('/', (req, res) => {
-  res.sendfile('./index.html');
+  res.sendfile('./public/index.html');
 });
 
 app.use(express.static(__dirname + '/public'));
