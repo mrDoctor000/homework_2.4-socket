@@ -1,34 +1,81 @@
-const io = require('socket.io-client');
+const io = require('socket.io');
 
-strings = {
-  'connected': '[sys][time]%time%[/time]: Вы успешно соединились к сервером как [user]%name%[/user].[/sys]',
-  'userJoined': '[sys][time]%time%[/time]: Пользователь [user]%name%[/user] присоединился к чату.[/sys]',
-  'messageSent': '[out][time]%time%[/time]: [user]%name%[/user]: %text%[/out]',
-  'messageReceived': '[in][time]%time%[/time]: [user]%name%[/user]: %text%[/in]',
-  'userSplit': '[sys][time]%time%[/time]: Пользователь [user]%name%[/user] покинул чат.[/sys]',
-};
+const chat = document.querySelector('.chat');
+const content = chat.querySelector('.messages-content');
+const loading = content.querySelector('.loading')
+const box = chat.querySelector('.message-box');
+const input = box.querySelector('.message-input')
+const submit = box.querySelector('.message-submit');
+const status = chat.querySelector('.message-status');
+
+function messageStatus(event) {
+  const message = document.createElement('div');
+  message.className = 'message message-status';
+  const span = document.createElement('span');
+  span.className = 'message-text';
+  span.textContent = event;
+
+  message.appendChild(span);
+
+  return message;
+}
+
+function getMessage(data, name) {
+  const date = new Date();
+  const time = date.getHours() + ':' + date.getMinutes();
+
+  const message = document.createElement('div');
+  message.className = 'message';
+  const span = document.createElement('span');
+  span.className = 'message-text';
+  span.textContent = name + ' : ' + data;
+  const timeMes = document.createElement('div');
+  timeMes.className = 'timestamp';
+  timeMes.textContent = time;
+
+  message.appendChild(span);
+  message.appendChild(timeMes);
+
+  return message;
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  var socket = io();
+  var socket = io.connect('http://localhost:3000');
 
   socket.on('connect', () => {
-    socket.on('message', msg => {
-      document.querySelector('#log').innerHTML += strings[msg.event]
-        .replace(/\[([a-z]+)\]/g, '<span class="$1">')
-        .replace(/\[\/[a-z]+\]/g, '</span>')
-        .replace(/\%time\%/, msg.time)
-        .replace(/\%name\%/, msg.name)
-        .replace(/\%text\%/, unescape(msg.text)
-          .replace('<', '&lt;')
-          .replace('>', '&gt;')) + '<br>';
+    submit.setAttribute('disabled', false);
 
-      document.querySelector('#log').scrollTop = document.querySelector('#log').scrollHeight;
+    socket.on('newUser', userName => {
+      var newUser = messageStatus(userName + 'подключился к сети!');
+      content.appendChild(newUser);
+
+      //document.querySelector('textarea').value = document.querySelector('textarea').value + userName + ' connected!\n';
+    });
+
+    socket.on('userJoined', userName => {
+      var userJoined = messageStatus("Ты подключился к чату. Твой username: " + userName);
+      content.appendChild(userJoined);
+
+      //document.querySelector('textarea').value = document.querySelector('textarea').value + 'You\'r username:  ' + userName + '\n';
     });
 
     document.querySelector('#form').addEventListener('submit', () => {
-      socket.send(document.querySelector('#input').value);
+      var message = document.querySelector('#input').value;
+      socket.emit('message', message);
       document.querySelector('#input').value = '';
     });
+
+    socket.on('messageToClient', (msg, name) => {
+      var message = getMessage(msg, name);
+      content.appendChild(message);
+
+      //document.querySelector('textarea').value = document.querySelector('textarea').value + name + ' : ' + msg + '\n';
+    });
+
+    socket.on('userDisconnected', name => {
+      var userDisconnected = messageStatus(name + 'отключился :(');
+      content.appendChild(userDisconnected);
+    })
 
     socket.on('disconnect', () => {
       socket.disconnect();
