@@ -25,20 +25,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
       document.querySelector('#log').scrollTop = document.querySelector('#log').scrollHeight;
     });
 
-    document.querySelector('#input').addEventListener('keypress', event => {
-      if (event.which == '13') {
-        socket.send(escape(document.querySelector('#input').value));
-        document.querySelector('#input').value = '';
-      }
-    });
-
-    document.querySelector('#send').addEventListener('click', event => {
+    document.querySelector('#form').addEventListener('submit', () => {
       socket.send(escape(document.querySelector('#input').value));
       document.querySelector('#input').value = '';
     });
-  });
 
-  socket.on('disconnect', () => {
-    socket.disconnect();
+    socket.on('disconnect', () => {
+      socket.disconnect();
+    });
   });
 });
