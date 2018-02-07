@@ -15,20 +15,16 @@ app.get('/', (req, res) => {
 app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function(socket) {
-  var ID = (socket.id).toString().substr(0, 5);
-  var time = (new Date).toLocaleTimeString();
+  var name = 'U' + (socket.id).toString().substr(1, 4);
 
-  socket.json.send({ 'event': 'connected', 'name': ID, 'time': time });
-  socket.broadcast.json.send({ 'event': 'userJoined', 'name': ID, 'time': time });
+  socket.emit('userJoined', name);
+  socket.broadcast.emit('newUser', name);
 
   socket.on('message', function(msg) {
-    var time = (new Date).toLocaleTimeString();
-    socket.json.send({ 'event': 'messageSent', 'name': ID, 'text': msg, 'time': time });
-    socket.broadcast.json.send({ 'event': 'messageReceived', 'name': ID, 'text': msg, 'time': time })
+    io.sockets.emit('messageToClients', msg, name);
   });
 
   socket.on('disconnect', function() {
-    var time = (new Date).toLocaleTimeString();
-    io.sockets.json.send({ 'event': 'userSplit', 'name': ID, 'time': time });
+    socket.emit('userDisconnected', name);
   });
 });
