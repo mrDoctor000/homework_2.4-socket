@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.querySelector('#form').addEventListener('submit', () => {
-      socket.send(escape(document.querySelector('#input').value));
+      socket.send(document.querySelector('#input').value);
       document.querySelector('#input').value = '';
     });
 
