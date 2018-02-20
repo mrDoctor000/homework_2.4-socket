@@ -1,15 +1,12 @@
 const express = require('express');
 const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
 const conf = require('./conf.js')
 
-server.listen(conf.port, () => {
-  console.log(`Server listening at port ${conf.port}.`)
-});
 
 app.get('/', (req, res) => {
-  res.sendfile('./public/index.html');
+  res.sendfile(__dirname + '/public/index.html');
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -28,3 +25,7 @@ io.on('connection', function(socket) {
     socket.emit('userDisconnected', name);
   });
 });
+
+http.listen(conf.port, () => {
+  console.log(`Server listening at port ${conf.port}.`)
+})

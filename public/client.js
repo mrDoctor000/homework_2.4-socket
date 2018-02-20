@@ -1,12 +1,10 @@
-const io = require('socket.io');
-
 const chat = document.querySelector('.chat');
-const content = chat.querySelector('.messages-content');
-const loading = content.querySelector('.loading')
-const box = chat.querySelector('.message-box');
-const input = box.querySelector('.message-input')
-const submit = box.querySelector('.message-submit');
-const status = chat.querySelector('.message-status');
+const content = document.querySelector('.messages-content');
+const loading = document.querySelector('.loading')
+const box = document.querySelector('.message-box');
+const input = document.querySelector('.message-input')
+const submit = document.querySelector('.message-submit');
+const status = document.querySelector('.message-status');
 
 function messageStatus(event) {
   const message = document.createElement('div');
@@ -43,7 +41,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   var socket = io.connect('http://localhost:3000');
 
   socket.on('connect', () => {
-    submit.setAttribute('disabled', false);
+    submit.removeAttribute('disabled')
 
     socket.on('newUser', userName => {
       var newUser = messageStatus(userName + 'подключился к сети!');
@@ -59,7 +57,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
       //document.querySelector('textarea').value = document.querySelector('textarea').value + 'You\'r username:  ' + userName + '\n';
     });
 
-    document.querySelector('#form').addEventListener('submit', () => {
+    document.querySelector('form').addEventListener('submit', () => {
+      event.preventDefault();
+
       var message = document.querySelector('#input').value;
       socket.emit('message', message);
       document.querySelector('#input').value = '';

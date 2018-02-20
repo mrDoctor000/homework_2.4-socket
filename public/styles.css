@@ -34,7 +34,6 @@ body {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url("../i/bg.jpg") no-repeat 0 0;
   -webkit-filter: blur(80px);
   filter: blur(80px);
   -webkit-transform: scale(1.2);
