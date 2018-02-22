@@ -75,10 +75,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
     socket.on('userDisconnected', name => {
       const userDisconnected = messageStatus(name + 'отключился :(');
       content.appendChild(userDisconnected);
-    })
+    });
 
     window.addEventListener('beforeunload', () => {
       socket.emit('disconnect');
+    });
+
+    socket.on('disconect', () => {
+      socket.disconnect();
     })
+
   });
 });
