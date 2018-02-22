@@ -13,16 +13,18 @@ app.use(express.static(__dirname + '/public'));
 
 io.on('connection', function(socket) {
   var name = 'U' + (socket.id).toString().substr(1, 4);
+  console.log(`${name} joined`);
 
   socket.emit('userJoined', name);
   socket.broadcast.emit('newUser', name);
 
   socket.on('message', function(msg) {
-    io.sockets.emit('messageToClients', msg, name);
+    console.log(`${name}: ${msg}`);
+    io.sockets.emit('message', msg, name);
   });
 
   socket.on('disconnect', function() {
-    socket.emit('userDisconnected', name);
+    socket.broadcast.emit('userDisconnected', name);
   });
 });
 

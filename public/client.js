@@ -38,47 +38,47 @@ function getMessage(data, name) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  var socket = io.connect('http://localhost:3000');
+  const socket = io();
 
   socket.on('connect', () => {
     submit.removeAttribute('disabled')
 
     socket.on('newUser', userName => {
-      var newUser = messageStatus(userName + 'подключился к сети!');
+      const newUser = messageStatus(userName + 'подключился к сети!');
       content.appendChild(newUser);
-
-      //document.querySelector('textarea').value = document.querySelector('textarea').value + userName + ' connected!\n';
     });
 
     socket.on('userJoined', userName => {
-      var userJoined = messageStatus("Ты подключился к чату. Твой username: " + userName);
+      const userJoined = messageStatus("Ты подключился к чату. Твой username: " + userName);
       content.appendChild(userJoined);
 
       //document.querySelector('textarea').value = document.querySelector('textarea').value + 'You\'r username:  ' + userName + '\n';
     });
 
-    document.querySelector('form').addEventListener('submit', () => {
+    submit.addEventListener('submit', () => {
       event.preventDefault();
 
-      var message = document.querySelector('#input').value;
+      const message = input.value;
+      console.log(input.value);
       socket.emit('message', message);
-      document.querySelector('#input').value = '';
+      input.value = '';
+      return false;
     });
 
-    socket.on('messageToClient', (msg, name) => {
-      var message = getMessage(msg, name);
+    socket.on('message', (msg, name) => {
+      const message = getMessage(msg, name);
       content.appendChild(message);
 
       //document.querySelector('textarea').value = document.querySelector('textarea').value + name + ' : ' + msg + '\n';
     });
 
     socket.on('userDisconnected', name => {
-      var userDisconnected = messageStatus(name + 'отключился :(');
+      const userDisconnected = messageStatus(name + 'отключился :(');
       content.appendChild(userDisconnected);
     })
 
-    socket.on('disconnect', () => {
-      socket.disconnect();
-    });
+    window.addEventListener('beforeunload', () => {
+      socket.emit('disconnect');
+    })
   });
 });
