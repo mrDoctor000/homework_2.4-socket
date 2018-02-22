@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
       //document.querySelector('textarea').value = document.querySelector('textarea').value + 'You\'r username:  ' + userName + '\n';
     });
 
-    submit.addEventListener('submit', () => {
+    document.querySelector('form').addEventListener('submit', event => {
       event.preventDefault();
 
       const message = input.value;
